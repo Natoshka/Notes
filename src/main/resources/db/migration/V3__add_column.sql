@@ -1,0 +1,1 @@
+alter table image add column content_type text;

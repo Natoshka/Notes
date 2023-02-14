@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Image Upload</title>
+</head>
+<body>
+<h1>Image Upload</h1>
+
+<form action="/api/upload" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="image">Select Image:</label>
+        <input type="file" id="image" name="image">
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+<div id="result">
+    <!-- The response from the POST request will be displayed here -->
+</div>
+
+<script>
+    // Send the POST request when the form is submitted
+    document.querySelector("form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let fileInput = document.querySelector("#image");
+        let file = fileInput.files[0];
+
+        let allowedExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
+        let fileExtension = file.name.split(".").pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            alert("Invalid file type. Only images are allowed.");
+            return;
+        }
+
+        let formData = new FormData(this);
+
+        fetch("/api/upload", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.text())
+            .then(text => {
+                document.querySelector("#result").innerHTML = text;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    });
+</script>
+</body>
+</html>
